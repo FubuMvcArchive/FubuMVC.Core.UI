@@ -78,7 +78,7 @@ namespace FubuMVC.Core.UI.Testing.Integration
                       .StatusCode.ShouldEqual(HttpStatusCode.OK);
 
                 response.ToString()
-                    .ShouldContain("<input type=\"text\" value=\"\" name=\"Children[-1].Name\" />");
+                    .ShouldContain("<input type=\"text\" value=\"\" name=\"Children[-1]Name\" />");
             }
         }
     }
