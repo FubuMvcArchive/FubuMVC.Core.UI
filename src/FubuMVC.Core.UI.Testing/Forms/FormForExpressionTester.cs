@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq.Expressions;
 using FubuMVC.Core.Http;
 using FubuMVC.Core.UI.Testing.Elements;
@@ -108,5 +109,7 @@ namespace FubuMVC.Core.UI.Testing.Forms
         {
             throw new NotImplementedException();
         }
+
+        public NameValueCollection QueryString { get; private set; }
     }
 }
