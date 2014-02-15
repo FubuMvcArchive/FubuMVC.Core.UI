@@ -72,5 +72,17 @@ namespace FubuMVC.Core.UI.Testing.Forms
 
             theRequest.Url.ShouldEqual(fullUrl);
         }
+
+        [Test]
+        public void close_tag_false_by_default()
+        {
+            theRequest.CloseTag.ShouldBeFalse();
+        }
+
+        [Test]
+        public void close_tag_true_when_set()
+        {
+            new FormRequest(theSearch, theInput, true).CloseTag.ShouldBeTrue();
+        }
     }
 }

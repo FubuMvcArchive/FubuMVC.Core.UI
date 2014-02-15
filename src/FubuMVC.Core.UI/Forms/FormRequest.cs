@@ -1,5 +1,4 @@
 ﻿using FubuCore;
-using FubuMVC.Core.Http;
 using FubuMVC.Core.Registration.Nodes;
 using FubuMVC.Core.Registration.Querying;
 using FubuMVC.Core.Urls;
@@ -11,12 +10,16 @@ namespace FubuMVC.Core.UI.Forms
     {
         private readonly ChainSearch _search;
         private readonly object _input;
+        private readonly bool _closeTag;
         private IServiceLocator _services;
 
-        public FormRequest(ChainSearch search, object input)
+        public FormRequest(ChainSearch search, object input) : this(search, input, false) { }
+
+        public FormRequest(ChainSearch search, object input, bool closeTag)
         {
             _search = search;
             _input = input;
+            _closeTag = closeTag;
         }
 
         public ChainSearch Search
@@ -27,6 +30,11 @@ namespace FubuMVC.Core.UI.Forms
         public object Input
         {
             get { return _input; }
+        }
+
+        public bool CloseTag
+        {
+            get { return _closeTag; }
         }
 
         public string Url { get; set; }
@@ -41,7 +49,7 @@ namespace FubuMVC.Core.UI.Forms
         {
             _services = locator;
             var resolver = locator.GetInstance<IChainResolver>();
-	        var urlResolver = locator.GetInstance<IChainUrlResolver>();
+            var urlResolver = locator.GetInstance<IChainUrlResolver>();
             Chain = resolver.Find(Search);
 
             if (Chain == null)
@@ -54,7 +62,7 @@ namespace FubuMVC.Core.UI.Forms
                 throw new FubuException(334, "Cannot post to this endpoint because there is no route");
             }
 
-	        Url = urlResolver.UrlFor(_input, Chain);
+            Url = urlResolver.UrlFor(_input, Chain);
         }
 
         public IServiceLocator Services

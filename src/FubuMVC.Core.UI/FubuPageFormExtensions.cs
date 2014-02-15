@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Web;
-
 using FubuMVC.Core.Http;
 using FubuMVC.Core.Registration.Querying;
 using FubuMVC.Core.UI.Forms;
@@ -16,13 +15,13 @@ namespace FubuMVC.Core.UI
     {
         public static HtmlTag FormFor(this IFubuPage page)
         {
-            return new FormTag();
+            return new FormTag().NoClosingTag();
         }
 
         public static HtmlTag FormFor(this IFubuPage page, string url)
         {
             url = page.Get<ICurrentHttpRequest>().ToFullUrl(url);
-            return new FormTag(url);
+            return new FormTag(url).NoClosingTag();
         }
 
         public static HtmlTag FormFor<TInputModel>(this IFubuPage page) where TInputModel : new()
@@ -36,13 +35,11 @@ namespace FubuMVC.Core.UI
             return page.FormFor(ChainSearch.ByUniqueInputType(model.GetType(), "POST"), model);
         }
 
-
         public static HtmlTag FormFor<TController>(this IFubuPage view, Expression<Action<TController>> expression)
         {
             var search = ChainSearch.ForMethod(expression, "POST");
             return view.FormFor(search, null);
         }
-
 
         public static HtmlTag FormFor(this IFubuPage view, object input)
         {
@@ -60,6 +57,19 @@ namespace FubuMVC.Core.UI
             var request = new FormRequest(search, input);
 
             return view.Get<ITagGeneratorFactory>().GeneratorFor<FormRequest>().Build(request);
+        }
+
+        public static HtmlTag FormFor(this IFubuPage view, ChainSearch search, object input, Action<HtmlTag> configure)
+        {
+            if (configure == null)
+            {
+                throw new ArgumentNullException("No form configuration provided", "configure");
+            }
+
+            var request = new FormRequest(search, input, true);
+            var tag = view.Get<ITagGeneratorFactory>().GeneratorFor<FormRequest>().Build(request);
+            configure(tag);
+            return tag;
         }
 
         public static IHtmlString EndForm(this IFubuPage page)

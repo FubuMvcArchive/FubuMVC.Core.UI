@@ -13,7 +13,11 @@ namespace FubuMVC.Core.UI.Forms
         public override HtmlTag Build(FormRequest request)
         {
             var tag = new FormTag(request.Url);
-            tag.NoClosingTag();
+
+            if (!request.CloseTag)
+            {
+                tag.NoClosingTag();
+            }
 
             return tag;
         }
