@@ -30,6 +30,12 @@ namespace FubuMVC.Core.UI
             return page.FormFor(search, new TInputModel());
         }
 
+        public static HtmlTag FormFor<TInputModel>(this IFubuPage page, Action<HtmlTag> configure) where TInputModel : new()
+        {
+            var search = ChainSearch.ByUniqueInputType(typeof (TInputModel), "POST");
+            return page.FormFor(search, new TInputModel(), configure);
+        }
+
         public static HtmlTag FormFor<TInputModel>(this IFubuPage page, TInputModel model)
         {
             return page.FormFor(ChainSearch.ByUniqueInputType(model.GetType(), "POST"), model);
