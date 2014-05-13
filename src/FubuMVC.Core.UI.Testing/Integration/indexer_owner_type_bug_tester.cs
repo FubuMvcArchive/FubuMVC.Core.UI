@@ -34,6 +34,12 @@ namespace FubuMVC.Core.UI.Testing.Integration
 
             return _document;
         }
+        public HtmlDocument get_template_for_indexer_property()
+        {
+            _document.Add(_document.InputFor(new Parent(), x => x.Children[-1].Name));
+
+            return _document;
+        }
     }
 
     [TestFixture]
@@ -55,6 +61,24 @@ namespace FubuMVC.Core.UI.Testing.Integration
 
                 response.ToString()
                     .ShouldContain("<input type=\"text\" value=\"\" name=\"Children[-1]\" />");
+            }
+        }
+        [Test]
+        public void should_build_the_template_for_indexer_property_just_fine()
+        {
+            using (var server = FubuApplication
+                .DefaultPolicies()
+                .StructureMap(new Container())
+                .RunEmbedded())
+            {
+                var response = server.Endpoints
+                    .Get<IndexerOwnerEndpoint>(x => x.get_template_for_indexer_property());
+
+                response
+                      .StatusCode.ShouldEqual(HttpStatusCode.OK);
+
+                response.ToString()
+                    .ShouldContain("<input type=\"text\" value=\"\" name=\"Children[-1]Name\" />");
             }
         }
     }
